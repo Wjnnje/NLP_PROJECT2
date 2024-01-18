@@ -280,5 +280,3 @@ xxhash==3.4.1
 
 yellowbrick==1.5
 zict==2.1.0
-zipp @ file:///C:/ci/zipp_1652273994994/work
-zope.interface @ file:///C:/ci/zope.interface_1625036252485/work
