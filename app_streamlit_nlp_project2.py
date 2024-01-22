@@ -4,11 +4,11 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
-from transformers import AutoModelWithLMHead, AutoTokenizer
+#from transformers import AutoModelWithLMHead, AutoTokenizer
 
-import pickle
+#import pickle
 
-from sklearn.svm import SVC
+#from sklearn.svm import SVC
 
 import time
 # Create sentiment analysis pipeline
@@ -17,6 +17,8 @@ classification = pipeline(
     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
     return_all_scores=True
 )
+
+qa = pipeline('question-answering')
 
 
 # Load Course dataset
@@ -85,14 +87,14 @@ def preprocess_text(text):
 #tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
 #model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
 
-model_filename = 'svm_model.pkl'
-vectorizer_filename = 'tfidf_vectorizer.pkl'
+# model_filename = 'svm_model.pkl'
+# vectorizer_filename = 'tfidf_vectorizer.pkl'
 
-with open(model_filename, 'rb') as model_file:
-    loaded_model = pickle.load(model_file)
+# with open(model_filename, 'rb') as model_file:
+#     loaded_model = pickle.load(model_file)
 
-with open(vectorizer_filename, 'rb') as vectorizer_file:
-    loaded_vectorizer = pickle.load(vectorizer_file)
+# with open(vectorizer_filename, 'rb') as vectorizer_file:
+#     loaded_vectorizer = pickle.load(vectorizer_file)
 
 def summarize(text, max_length=150):
   input_ids = tokenizer.encode(text, return_tensors="pt", add_special_tokens=True)
@@ -250,7 +252,7 @@ def main():
             st.session_state.context_string = context_string
 
                 # Perform question answering
-            qa = pipeline('question-answering')
+            
             answer = qa(context=context_string, question=prompt)
 
             with st.chat_message("assistant"):
