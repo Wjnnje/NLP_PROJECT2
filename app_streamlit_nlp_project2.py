@@ -91,10 +91,12 @@ def preprocess_text(text):
     return text
 
 @st.cache_data(persist=True)
-def load_t5_model_and_tokenizer():
-    t5_tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-    t5_model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-    return t5_tokenizer, t5_model
+def load_t5_tokenizer():
+    return AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+
+@st.cache_data(persist=True)
+def load_t5_model():
+    return AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
 
 
 
@@ -320,7 +322,8 @@ def main():
     elif page=="Summary":
         st.header("Review Summarization Page")
         st.write("Enter your review below, and we will provide a summary for you.")
-        tokenizer, model=load_t5_model_and_tokenizer()
+        tokenizer = load_t5_tokenizer()
+        model = load_t5_model()
 
         # User input for review
         user_review = st.text_area("Enter your review here:")
