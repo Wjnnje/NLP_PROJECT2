@@ -68,7 +68,7 @@ sentencepiece==0.1.99
 
 
 
-sktime==0.21.1
+
 
 
 
