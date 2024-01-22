@@ -12,11 +12,11 @@ from sklearn.svm import SVC
 
 import pickle
 # Create sentiment analysis pipeline
-classification = pipeline(
-    task="sentiment-analysis",
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
-    return_all_scores=True
-)
+# classification = pipeline(
+#     task="sentiment-analysis",
+#     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+#     return_all_scores=True
+# )
 
 # Load Course dataset
 
@@ -36,14 +36,14 @@ def preprocess_text(text):
 
     return text
 
-model_filename = 'svm_model.pkl'
-vectorizer_filename = 'tfidf_vectorizer.pkl'
+# model_filename = 'svm_model.pkl'
+# vectorizer_filename = 'tfidf_vectorizer.pkl'
 
-with open(model_filename, 'rb') as model_file:
-     loaded_model = pickle.load(model_file)
+# with open(model_filename, 'rb') as model_file:
+#      loaded_model = pickle.load(model_file)
 
-with open(vectorizer_filename, 'rb') as vectorizer_file:
-     loaded_vectorizer = pickle.load(vectorizer_file)
+# with open(vectorizer_filename, 'rb') as vectorizer_file:
+#      loaded_vectorizer = pickle.load(vectorizer_file)
 
 tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
 model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
