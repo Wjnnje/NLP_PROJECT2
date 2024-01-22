@@ -36,11 +36,6 @@ def preprocess_text(text):
 
     return text
 
-
-
-tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-
 model_filename = 'svm_model.pkl'
 vectorizer_filename = 'tfidf_vectorizer.pkl'
 
@@ -128,20 +123,6 @@ def main():
             st.write(f"Predicted Rating: {rating_prediction}")
 
 
-    elif page=="Summary":
-        st.header("Review Summarization Page")
-        st.write("Enter your review below, and we will provide a summary for you.")
-
-        # User input for review
-        user_review = st.text_area("Enter your review here:")
-
-        if st.button("Generate Summary"):
-            # Perform summarization (you may need to replace this with your summarization logic)
-            # For this example, let's assume a simple summary by taking the first 50 characters of the review
-            summary = summarize(user_review)
-            
-            st.subheader("Review Summary:")
-            st.write(summary)
 
     elif page == "Explanation":
         st.header("Explanation Page")
