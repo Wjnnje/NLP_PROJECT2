@@ -45,6 +45,11 @@ with open(model_filename, 'rb') as model_file:
 with open(vectorizer_filename, 'rb') as vectorizer_file:
      loaded_vectorizer = pickle.load(vectorizer_file)
 
+tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+
+
+
 def summarize(text, max_length=150):
   input_ids = tokenizer.encode(text, return_tensors="pt", add_special_tokens=True)
 
@@ -121,6 +126,21 @@ def main():
             rating_prediction = loaded_model.predict([user_input_rating_processed])[0]
 
             st.write(f"Predicted Rating: {rating_prediction}")
+
+    elif page=="Summary":
+        st.header("Review Summarization Page")
+        st.write("Enter your review below, and we will provide a summary for you.")
+
+        # User input for review
+        user_review = st.text_area("Enter your review here:")
+
+        if st.button("Generate Summary"):
+            # Perform summarization (you may need to replace this with your summarization logic)
+            # For this example, let's assume a simple summary by taking the first 50 characters of the review
+            summary = summarize(user_review)
+            
+            st.subheader("Review Summary:")
+            st.write(summary)
 
 
 
