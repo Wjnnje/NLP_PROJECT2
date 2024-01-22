@@ -202,7 +202,7 @@ def main():
 
     elif page == "Service Retrieval":
         st.header("Service Retrieval Page")
-        query_summary = st.text_area("✏️ Enter your request :")
+        query_summary = st.text_area("✏️ Enter your request : Exemple: Small hand jobs in Paris ")
 
         if st.button("Retrieve Services"):
             if query_summary:
@@ -241,7 +241,7 @@ def main():
 
     elif page == "Chatbot: Question Answering":
         st.header("Try our Assistant chatbot to help you !")
-        st.subheader("Hello! How can I help you?")
+        st.subheader("Hello! How can I help you? Ask for example: Can you give me the name of a company that do small home jobs in Paris ")
 
         
         # Display chat messages from history
