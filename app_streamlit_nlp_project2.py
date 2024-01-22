@@ -108,7 +108,7 @@ def main():
     st.title("Home services Application")
 
      # Sidebar with options
-    page_options = ["Home", "Prediction","Service Retrieval","Chatbot: Question Answering","Summary"]
+    page_options = ["Home", "Prediction","Service Retrieval","Chatbot: Question Answering","Summary","Explanation"]
     page = st.sidebar.selectbox("Choose a page", page_options)
 
     
@@ -139,11 +139,6 @@ def main():
         if st.button("Analyze Sentiment"):
             # Perform sentiment analysis
             result = classification(user_input)
-
-            
-           
-            
-
             # Determine the overall sentiment
             overall_sentiment = max(result[0], key=lambda x: x['score'])
             if overall_sentiment['label']=='negative':
@@ -312,6 +307,81 @@ def main():
             
             st.subheader("Review Summary:")
             st.write(summary)
+
+    elif page == "Explanation":
+        st.header("Explanation Page")
+        st.write("Welcome to the Explanation Page. Here, we'll provide some details about the app and its functionality.")
+
+        # Add explanation text
+        st.subheader("How the Sentiment Prediction Works:")
+        st.write("Sentiment prediction is based on the bert multilingual cased sentiment available on Hugging Face. The model compute as result a dictionnary with the sentiment label as the key and its probability as value. In our application, we select the overall sentiment.")
+        
+        # Add code snippets
+        st.subheader("Code Snippet: Sentiment Prediction")
+        st.code("""
+        classification = pipeline(
+                                    task="sentiment-analysis",
+                                    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+                                    return_all_scores=True)
+
+        user_input = st.text_area("Enter your text here:")
+        
+        if st.button("Analyze Sentiment"):
+            result = classification(user_input)
+            # Process the sentiment analysis results
+            # Display the overall sentiment and detailed scores
+            """)
+
+        st.subheader("How the Service Retrieval Works:")
+        st.write("This functionnality is based on Tf-idf vectorization of each description of services. We then compute the cosine similiarity between the user's query and the available services. Finally, this score is weighted by the average score of each services, in order to provide the best services.")
+        
+        # Add code snippets
+        st.subheader("Code Snippet: Service Retrieval")
+        st.code("""
+        query_summary = st.text_area("✏️ Enter your request :")
+        
+        if st.button("Retrieve Services"):
+            similarity_scores_with_impact, top_documents = retrieve_top_documents(query_summary, k=10)
+            # Process and display the top service retrieval results
+            """)
+
+        st.subheader("How the Question Answering Chatbot Works:")
+        st.write("our Chatbot relieves on the combination of TF-idf and question answering model from Hugging Face.")
+        
+        # Add code snippets
+        st.subheader("Code Snippet: Question Answering Chatbot")
+        st.code("""
+        qa = pipeline('question-answering')
+        prompt = st.chat_input("What is up?")
+        
+        if prompt and st.session_state.context_string == []:
+            similarity_scores_with_impact, top_documents = retrieve_top_documents(prompt, k=10)
+                # we compute top 10 results that matches the user's query using tf-idf
+            context_string = create_context_string(top_documents)
+                #we store those info into a context string
+            st.session_state.context_string = context_string
+            answer = qa(context=context_string, question=prompt)
+                # using the qa model, we provide the context and user's query
+            # Display the chatbot response
+            """)
+        
+        st.subheader("How the Summary works:")
+        st.write("The summary is based on")
+        
+        # Add code snippets
+        st.subheader("Code Snippet: Review summary")
+        st.code("""
+        
+         user_review = st.text_area("Enter your review here:")
+
+        if st.button("Generate Summary"):
+            # Perform summarization (you may need to replace this with your summarization logic)
+            # For this example, let's assume a simple summary by taking the first 50 characters of the review
+            summary = summarize(user_review)
+            
+            st.subheader("Review Summary:")
+            st.write(summary)
+            """)
 
     
 
