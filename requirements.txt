@@ -21,7 +21,7 @@ joblib==1.2.0
 
 
 kaleido==0.2.1
-keras==2.11.0
+keras==2.14.0
 
 langcodes==3.3.0
 
