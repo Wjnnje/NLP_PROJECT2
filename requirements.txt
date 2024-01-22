@@ -2,7 +2,8 @@ transformers==4.11.3
 nltk>=3.6.3
 streamlit>=1.8.0
 scipy==1.9.1
-scikit-learn
+scikit-learn==1.2.2
+
 gensim
 torch==2.1.2
 
