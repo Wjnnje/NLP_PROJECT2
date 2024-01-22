@@ -162,8 +162,7 @@ pmdarima==2.0.4
 pprintpp==0.4.0
 preshed==3.0.9
 priority==2.0.0
-k
-protobuf==3.20.0
+
 
 pyarrow==13.0.0
 
