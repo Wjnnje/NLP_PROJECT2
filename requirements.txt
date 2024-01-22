@@ -4,6 +4,7 @@ streamlit>=1.8.0
 scipy==1.9.1
 scikit-learn
 gensim
+torch==2.1.2
 
 
 
