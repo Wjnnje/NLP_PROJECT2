@@ -1,6 +1,6 @@
 
 pandas==2.1.0
-numpy==1.21.2
+numpy
 gensim==4.3.2
 
 
