@@ -82,8 +82,8 @@ def preprocess_text(text):
 
 
 
-tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+#tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+#model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
 
 model_filename = 'svm_model.pkl'
 vectorizer_filename = 'tfidf_vectorizer.pkl'
