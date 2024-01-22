@@ -7,22 +7,32 @@ from sklearn.metrics.pairwise import linear_kernel
 from transformers import AutoModelWithLMHead, AutoTokenizer
 
 import pickle
+import string
 
 from sklearn.svm import SVC
 
 import time
-# Create sentiment analysis pipeline
-classification = pipeline(
-    task="sentiment-analysis",
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
-    return_all_scores=True
-)
-
 
 # Load Course dataset
 
 df=pd.read_csv("df_mergedV4.csv",sep=',')
 filtered_documents=df.copy()
+
+@st.cache(allow_output_mutation=True)
+def load_sentiment_analysis_pipeline():
+    return pipeline(
+        task="sentiment-analysis",
+        model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+        return_all_scores=True
+)
+
+@st.cache(allow_output_mutation=True)
+def load_qa_pipeline():
+    return pipeline('question-answering')
+
+
+
+
 
 @st.cache_data(persist=True)
 def get_tfidf_vectorizer(description_trad_clean):
@@ -67,7 +77,7 @@ def create_context_string(top_documents):
         contexts.append(context_string)
     
     return '\n'.join(contexts)
-import string
+
 
 def preprocess_text(text):
     # Convert to lowercase
@@ -80,28 +90,40 @@ def preprocess_text(text):
 
     return text
 
+@st.cache_data(persist=True)
+def load_t5_model_and_tokenizer():
+    t5_tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+    t5_model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+    return t5_tokenizer, t5_model
 
 
-# tokenizer = AutoTokenizer.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
-# model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-summarize-news")
+
 
 model_filename = 'svm_model.pkl'
 vectorizer_filename = 'tfidf_vectorizer.pkl'
 
-with open(model_filename, 'rb') as model_file:
-    loaded_model = pickle.load(model_file)
+@st.cache_data(persist=True)
+def load_svm_model():
+    model_filename = 'svm_model.pkl'
+    with open(model_filename, 'rb') as model_file:
+        loaded_model = pickle.load(model_file)
+    return loaded_model
 
-with open(vectorizer_filename, 'rb') as vectorizer_file:
-    loaded_vectorizer = pickle.load(vectorizer_file)
+@st.cache_data(persist=True)
+def load_tfidf_vectorizer():
+    vectorizer_filename = 'tfidf_vectorizer.pkl'
+    with open(vectorizer_filename, 'rb') as vectorizer_file:
+        loaded_vectorizer = pickle.load(vectorizer_file)
+    return loaded_vectorizer
 
-# def summarize(text, max_length=150):
-#   input_ids = tokenizer.encode(text, return_tensors="pt", add_special_tokens=True)
+def summarize(text,tokenizer, model, max_length=150):
+  input_ids = tokenizer.encode(text, return_tensors="pt", add_special_tokens=True)
 
-#   generated_ids = model.generate(input_ids=input_ids, num_beams=2, max_length=max_length,  repetition_penalty=2.5, length_penalty=1.0, early_stopping=True)
+  generated_ids = model.generate(input_ids=input_ids, num_beams=2, max_length=max_length,  repetition_penalty=2.5, length_penalty=1.0, early_stopping=True)
 
-#   preds = [tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=True) for g in generated_ids]
+  preds = [tokenizer.decode(g, skip_special_tokens=True, clean_up_tokenization_spaces=True) for g in generated_ids]
 
-#   return preds[0]
+  return preds[0]
 
 # Streamlit App
 def main():
@@ -135,6 +157,7 @@ def main():
 
         # User input for prediction
         user_input = st.text_area("Enter your text here:")
+        classification=load_sentiment_analysis_pipeline()
 
         if st.button("Analyze Sentiment"):
             # Perform sentiment analysis
@@ -162,7 +185,8 @@ def main():
         if st.button("Predict Rating"):
              # Preprocess the user input text
             user_input_rating_processed = preprocess_text(user_input_rating)
-
+            loaded_vectorizer=load_tfidf_vectorizer()
+            loaded_model=load_svm_model()
             # Vectorize the input text using the loaded TF-IDF vectorizer
             user_input_vectorized = loaded_vectorizer.transform([user_input_rating_processed])
 
@@ -250,7 +274,7 @@ def main():
             st.session_state.context_string = context_string
 
                 # Perform question answering
-            qa = pipeline('question-answering')
+            qa =load_qa_pipeline()
             answer = qa(context=context_string, question=prompt)
 
             with st.chat_message("assistant"):
@@ -272,7 +296,7 @@ def main():
             
                 # Option to refresh or continue with the same context
         elif prompt and st.session_state.context_string!=[]:
-            qa = pipeline('question-answering')
+            qa =load_qa_pipeline()
             answer = qa(context=st.session_state.context_string, question=prompt)
             print("prompt",prompt)
 
@@ -296,6 +320,7 @@ def main():
     elif page=="Summary":
         st.header("Review Summarization Page")
         st.write("Enter your review below, and we will provide a summary for you.")
+        tokenizer, model=load_t5_model_and_tokenizer()
 
         # User input for review
         user_review = st.text_area("Enter your review here:")
@@ -303,7 +328,7 @@ def main():
         if st.button("Generate Summary"):
             # Perform summarization (you may need to replace this with your summarization logic)
             # For this example, let's assume a simple summary by taking the first 50 characters of the review
-            summary = summarize(user_review)
+            summary = summarize(user_review,tokenizer, model)
             
             st.subheader("Review Summary:")
             st.write(summary)
