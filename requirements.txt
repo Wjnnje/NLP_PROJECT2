@@ -84,7 +84,7 @@ streamlit==1.27.2
 tenacity==8.2.3
 
 
-tensorflow==2.14.0
+
 
 
 
