@@ -1,8 +1,8 @@
 
 pandas==2.1.0
-
+numpy==1.21.2
 gensim==4.3.2
-imbalanced-learn==0.11.0
+
 
 huggingface-hub==0.20.2
 
