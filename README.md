@@ -23,3 +23,4 @@ The review summary functionality generates a summary of a given review. Enter yo
 
 ## Streamlit App
 You an access the application with this link : https://nlp-services.streamlit.app/
+Link to the colab notebook : https://colab.research.google.com/drive/1vFqinydgpA5K11Ld4YfAq0Bzn1XPlVEU?usp=sharing
