@@ -16,9 +16,10 @@ Our chatbot combines TF-idf and a question-answering model from Hugging Face to 
 The review summary functionality generates a summary of a given review. Enter your review in the provided text area and click the "Generate Summary" button. Note that you may need to replace the summarization logic in the code snippet with your own implementation.
 
 ## Repository Content
-- **`app_streamlit_nlp_project2.py.py`**: Python script to run the application.
+- **`app_streamlit_nlp_project2.py`**: Python script to run the application.
 - **`notebook_project2.ipynb`**: Jupyter notebook containing the project work.
 - **`dataset`**:  containing the dataset used in the project.
+- **`bestmodel.pkl`**: the model in pkl format to predict the rating 
 
 ## Streamlit App
 You an access the application with this link : https://nlp-services.streamlit.app/
